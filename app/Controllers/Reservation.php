@@ -31,6 +31,9 @@ class Reservation extends Controller
         // 🔹 Récupère l’utilisateur à partir de la table users
         $user = $userModel->where('email', $email)->first();
         if (!$user) {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Utilisateur introuvable']);
+            }
             return redirect()->to(site_url('Connexion'))->with('error', 'Utilisateur introuvable');
         }
 
@@ -51,6 +54,10 @@ class Reservation extends Controller
             'res_montant' => 0, // calculer si nécessaire
             'res_num' => uniqid('RES')
         ]);
+
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Merci de votre réservation']);
+        }
 
         return redirect()->to(site_url('Home'))->with('success', 'Réservation effectuée !');
     }
