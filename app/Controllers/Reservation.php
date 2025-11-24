@@ -41,7 +41,7 @@ class Reservation extends Controller
 
         // 🔹 Insertion dans reserver
         $resModel->insert([
-            'Id_Client' => $user['id'],
+            'user_id' => $user['id'],
             'Id_Chambre' => $idChambre,
             'res_nb_personnes' => $nbPersonnes,
             'res_date_debut' => $dateDebut,
