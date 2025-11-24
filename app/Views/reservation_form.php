@@ -1,36 +1,28 @@
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm p-4">
-            <h3 class="text-center mb-3">Réserver la chambre <?= $chambre['ch_numero'] ?></h3>
+<h3>Réserver la chambre <?= $chambre['ch_numero'] ?></h3>
 
-            <?php if(session()->getFlashdata('error')): ?>
-            <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
-            <?php endif; ?>
+<?php if(session()->getFlashdata('error')): ?>
+<div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+<?php endif; ?>
 
-            <!-- Banner for messages (will be filled by JS after AJAX) -->
-            <div id="reservation-message" style="display:none; margin-bottom:1rem;"></div>
+<!-- Banner for messages (will be filled by JS after AJAX) -->
+<div id="reservation-message" style="display:none; margin-bottom:1rem;"></div>
 
-            <form id="reservation-form" action="<?= site_url('Reservation/submit') ?>" method="post">
-                <input type="hidden" name="Id_Chambre" value="<?= $chambre['Id_Chambre'] ?>">
-                <div class="mb-3">
-                    <label>Nombre de personnes</label>
-                    <input type="number" name="res_nb_personnes" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label>Date début</label>
-                    <input type="datetime-local" name="res_date_debut" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label>Date fin</label>
-                    <input type="datetime-local" name="res_date_fin" class="form-control" required>
-                </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-success">Réserver</button>
-                </div>
-            </form>
-        </div>
+<form id="reservation-form" action="<?= site_url('Reservation/submit') ?>" method="post">
+    <input type="hidden" name="Id_Chambre" value="<?= $chambre['Id_Chambre'] ?>">
+    <div class="mb-3">
+        <label>Nombre de personnes</label>
+        <input type="number" name="res_nb_personnes" class="form-control" required>
     </div>
-</div>
+    <div class="mb-3">
+        <label>Date début</label>
+        <input type="datetime-local" name="res_date_debut" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Date fin</label>
+        <input type="datetime-local" name="res_date_fin" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success">Réserver</button>
+</form>
 
 <!-- Simple confirmation modal (no external libs) -->
 <div id="confirm-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:1000;">
@@ -92,9 +84,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 modal.style.display = 'none';
                 if (!data) return;
                 if (data.status && data.status === 'success') {
-                    // Show thank you banner (light red background as requested)
+                    // Show thank you banner
                     msg.style.display = 'block';
-                    msg.className = 'alert alert-danger text-center fs-5';
+                    msg.className = 'alert alert-success';
                     msg.innerText = data.message || 'Merci de votre réservation';
                     // Optionally clear form
                     form.reset();

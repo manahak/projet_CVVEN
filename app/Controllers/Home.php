@@ -23,16 +23,11 @@ class Home extends Controller
         $chambreModel = new ChambreModel();
         $chambres = $chambreModel->getAll();
 
-        $data = [
+        return view('pages/home', [
             'iduser' => $iduser,
             'userAdmin' => $userAdmin,
-            'chambres' => $chambres,
-            'title' => 'Accueil'
-        ];
-
-        echo view('templates/header', $data);
-        echo view('pages/home', $data);
-        echo view('templates/footer', $data);
+            'chambres' => $chambres
+        ]);
 
     }
 }

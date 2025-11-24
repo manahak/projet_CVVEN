@@ -15,10 +15,7 @@ class Reservation extends Controller
         $chambreModel = new ChambreModel();
         $chambre = $chambreModel->find($idChambre);
 
-        $data = ['chambre' => $chambre, 'title' => 'Réserver la chambre '.$chambre['ch_numero']];
-        echo view('templates/header', $data);
-        echo view('reservation_form', $data);
-        echo view('templates/footer', $data);
+        return view('reservation_form', ['chambre' => $chambre]);
     }
 
     public function submit()
@@ -46,21 +43,6 @@ class Reservation extends Controller
         $dateFin = $this->request->getPost('res_date_fin');
 
         // 🔹 Insertion dans reserver
-        // Vérifier si une réservation identique existe déjà (même user, même chambre, mêmes dates)
-        $existing = $resModel->where([
-            'user_id' => $user['id'],
-            'Id_Chambre' => $idChambre,
-            'res_date_debut' => $dateDebut,
-            'res_date_fin' => $dateFin
-        ])->first();
-
-        if ($existing) {
-            if ($this->request->isAJAX()) {
-                return $this->response->setJSON(['status' => 'error', 'message' => 'Vous avez déjà réservé cette chambre pour ces dates']);
-            }
-            return redirect()->back()->with('error', 'Vous avez déjà réservé cette chambre pour ces dates');
-        }
-
         $resModel->insert([
             'user_id' => $user['id'],
             'Id_Chambre' => $idChambre,
