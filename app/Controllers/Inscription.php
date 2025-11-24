@@ -4,13 +4,16 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use App\Models\UserModel;
-use App\Models\ClientModel;
+// ClientModel not used in this controller; removed to avoid missing-class issues
 
 class Inscription extends Controller
 {
     public function index()
     {
-        return view('inscription_form');
+        $data = ['title' => 'Inscription'];
+        echo view('templates/header', $data);
+        echo view('inscription_form', $data);
+        echo view('templates/footer', $data);
     }
 
     public function register()
@@ -20,8 +23,7 @@ class Inscription extends Controller
         $email = $this->request->getPost('cl_mail');
         $password = $this->request->getPost('password');
 
-        $userModel = new UserModel();
-        $clientModel = new ClientModel();
+    $userModel = new UserModel();
 
         if ($userModel->where('email', $email)->first()) {
             return redirect()->back()->with('error', 'Email déjà utilisé');

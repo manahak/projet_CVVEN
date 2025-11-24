@@ -10,8 +10,11 @@ class Connexion extends Controller
 {
     public function index()
     {
-        // Affiche le formulaire de connexion
-        return view('connexion_form');
+        // Affiche le formulaire de connexion avec template global
+        $data = ['title' => 'Connexion'];
+        echo view('templates/header', $data);
+        echo view('connexion_form', $data);
+        echo view('templates/footer', $data);
     }
 
     public function login()
