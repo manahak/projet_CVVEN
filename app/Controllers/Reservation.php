@@ -18,6 +18,27 @@ class Reservation extends Controller
         return view('reservation_form', ['chambre' => $chambre]);
     }
 
+    // 🔹 Récupère les dates réservées pour une chambre (AJAX)
+    public function getReservedDates($idChambre)
+    {
+        $resModel = new ReservationModel();
+        // Get all reservations for this room
+        $reservations = $resModel->where('Id_Chambre', $idChambre)->findAll();
+
+        $reserved = [];
+        foreach ($reservations as $res) {
+            $start = new \DateTime($res['res_date_debut']);
+            $end = new \DateTime($res['res_date_fin']);
+            // Add all dates in range (inclusive)
+            while ($start <= $end) {
+                $reserved[] = $start->format('Y-m-d');
+                $start->modify('+1 day');
+            }
+        }
+
+        return $this->response->setJSON(['reserved' => array_values(array_unique($reserved))]);
+    }
+
     public function submit()
     {
         // 🔹 Initialisation de la session
@@ -31,9 +52,6 @@ class Reservation extends Controller
         // 🔹 Récupère l’utilisateur à partir de la table users
         $user = $userModel->where('email', $email)->first();
         if (!$user) {
-            if ($this->request->isAJAX()) {
-                return $this->response->setJSON(['status' => 'error', 'message' => 'Utilisateur introuvable']);
-            }
             return redirect()->to(site_url('Connexion'))->with('error', 'Utilisateur introuvable');
         }
 
@@ -41,6 +59,7 @@ class Reservation extends Controller
         $nbPersonnes = $this->request->getPost('res_nb_personnes');
         $dateDebut = $this->request->getPost('res_date_debut');
         $dateFin = $this->request->getPost('res_date_fin');
+        $resNum = uniqid('RES-');
 
         // 🔹 Insertion dans reserver
         $resModel->insert([
@@ -52,11 +71,15 @@ class Reservation extends Controller
             'res_duree' => '', // ou calculer la durée
             'res_date' => date('Y-m-d H:i:s'),
             'res_montant' => 0, // calculer si nécessaire
-            'res_num' => uniqid('RES')
+            'res_num' => $resNum
         ]);
 
         if ($this->request->isAJAX()) {
-            return $this->response->setJSON(['status' => 'success', 'message' => 'Merci de votre réservation']);
+            return $this->response->setJSON([
+                'status' => 'success',
+                'message' => 'Merci de votre réservation',
+                'res_num' => $resNum
+            ]);
         }
 
         return redirect()->to(site_url('Home'))->with('success', 'Réservation effectuée !');
