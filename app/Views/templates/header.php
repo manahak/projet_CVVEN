@@ -5,11 +5,10 @@
     <title>Connexion</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light">
 
 <style>
 /* Global small adjustments */
-body { background-color: #f8f9fa; }
+body { background-color: #c7c7c7ff; }
 .site-header { background: #ffffff; border-bottom: 1px solid #e9ecef; }
 .brand { font-weight:700; font-size:1.25rem; color:#212529; }
 .room-card { aspect-ratio: 1 / 1; display:flex; flex-direction:column; }
