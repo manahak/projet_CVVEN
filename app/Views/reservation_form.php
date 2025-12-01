@@ -1,3 +1,5 @@
+<?= view('templates/header') ?>
+
 <h3>Réserver la chambre <?= $chambre['ch_numero'] ?></h3>
 
 <?php if(session()->getFlashdata('error')): ?>

@@ -1,3 +1,5 @@
+<?= view('templates/header') ?>
+
 <h2>Liste des chambres</h2>
 <ul class="list-group">
     <?php foreach($chambres as $ch): ?>

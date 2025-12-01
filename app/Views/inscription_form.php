@@ -1,3 +1,5 @@
+<?= view('templates/header') ?>
+
 <h3 class="text-center mb-4">Créer un compte</h3>
 
 <?php if(session()->getFlashdata('error')): ?>

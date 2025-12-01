@@ -1,3 +1,5 @@
+<?= view('templates/header') ?>
+
 <h2>Liste des réservations</h2>
 <table class="table table-bordered">
     <thead>
