@@ -33,8 +33,11 @@
                         <td><?= esc($r['res_date_fin'] ?? '') ?></td>
                         <td><?= esc($r['res_montant'] ?? '') ?> €</td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-info">Voir</a>
-                            <a href="#" class="btn btn-sm btn-danger">Annuler</a>
+                            <a href="<?= site_url('PageAdmin/reservationView/' . ($r['res_num'] ?? '')) ?>" class="btn btn-sm btn-info">Voir</a>
+                            <form method="post" action="<?= site_url('PageAdmin/reservationCancel/' . ($r['res_num'] ?? '')) ?>" style="display:inline;" onsubmit="return confirm('Annuler cette réservation ?');">
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn btn-sm btn-danger">Annuler</button>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>

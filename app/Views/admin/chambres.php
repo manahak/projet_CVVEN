@@ -30,8 +30,11 @@
                         <td><?= esc($c['ch_prix'] ?? $c['prix'] ?? '') ?> €</td>
                         <td><?= esc($c['ch_description'] ?? $c['description'] ?? '') ?></td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-info">Éditer</a>
-                            <a href="#" class="btn btn-sm btn-danger">Supprimer</a>
+                            <a href="<?= site_url('PageAdmin/chambresEdit/' . ($c['Id_Chambre'] ?? $c['id'] ?? '')) ?>" class="btn btn-sm btn-info">Éditer</a>
+                            <form method="post" action="<?= site_url('PageAdmin/chambresDelete/' . ($c['Id_Chambre'] ?? $c['id'] ?? '')) ?>" style="display:inline;" onsubmit="return confirm('Supprimer cette chambre ?');">
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>

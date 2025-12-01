@@ -27,8 +27,11 @@
                         <td><?= esc($u['email'] ?? $u['mail'] ?? '') ?></td>
                         <td><?= !empty($u['userAdmin']) || !empty($u['is_admin']) ? 'Oui' : 'Non' ?></td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-warning">Modifier</a>
-                            <a href="#" class="btn btn-sm btn-danger">Supprimer</a>
+                            <a href="<?= site_url('PageAdmin/usersEdit/' . ($u['id'] ?? '')) ?>" class="btn btn-sm btn-warning">Modifier</a>
+                            <form method="post" action="<?= site_url('PageAdmin/usersDelete/' . ($u['id'] ?? '')) ?>" style="display:inline;" onsubmit="return confirm('Supprimer cet utilisateur ?');">
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>
