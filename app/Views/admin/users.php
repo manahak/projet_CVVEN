@@ -5,6 +5,7 @@
     <p class="text-muted">Liste des comptes utilisateurs. Vous pouvez modifier les rôles ou supprimer un utilisateur.</p>
 
     <div class="mb-3">
+        <a href="<?= site_url('PageAdmin/usersAdd') ?>" class="btn btn-primary">Ajouter un utilisateur</a>
         <a href="<?= site_url('PageAdmin') ?>" class="btn btn-secondary">Retour</a>
     </div>
 

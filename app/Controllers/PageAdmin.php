@@ -269,4 +269,50 @@ class PageAdmin extends Controller
         session()->setFlashdata('success', 'Utilisateur supprimé.');
         return redirect()->to(site_url('PageAdmin/users'));
     }
+
+    public function usersAdd()
+    {
+        Session::startSession();
+        if (!Session::verifySession() || Session::getSessionData('userAdmin') != 1) {
+            return redirect()->to(site_url('Connexion/deconnexion'));
+        }
+
+        $userModel = new \App\Models\UserModel();
+
+        if ($this->request->getMethod() === 'post') {
+            $data = [
+                'nom' => $this->request->getPost('nom'),
+                'prenom' => $this->request->getPost('prenom'),
+                'email' => $this->request->getPost('email'),
+                'userAdmin' => $this->request->getPost('userAdmin') ? 1 : 0,
+            ];
+
+            $password = $this->request->getPost('password');
+
+            $validation = \Config\Services::validation();
+            $validation->setRules([
+                'nom' => 'required',
+                'email' => 'required|valid_email',
+                'password' => 'required|min_length[6]'
+            ]);
+
+            if ($validation->run(array_merge($data, ['password' => $password]))) {
+                // check duplicate email
+                if ($userModel->where('email', $data['email'])->first()) {
+                    session()->setFlashdata('error', 'Un utilisateur avec cet email existe déjà.');
+                    return view('admin/user_form', ['user' => $data, 'mode' => 'add', 'errors' => ['email' => 'Email déjà utilisé']]);
+                }
+
+                $data['password'] = password_hash($password, PASSWORD_DEFAULT);
+                $userModel->insert($data);
+                session()->setFlashdata('success', 'Utilisateur ajouté.');
+                return redirect()->to(site_url('PageAdmin/users'));
+            } else {
+                $errors = $validation->getErrors();
+                return view('admin/user_form', ['errors' => $errors, 'user' => $data, 'mode' => 'add']);
+            }
+        }
+
+        return view('admin/user_form', ['mode' => 'add']);
+    }
 }

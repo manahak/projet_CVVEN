@@ -17,7 +17,7 @@
         <?= csrf_field() ?>
 
         <div class="mb-3">
-            <label class="form-label">Numéro / Nom</label>
+            <label class="form-label">Numéro</label>
             <input type="text" name="ch_numero" class="form-control" value="<?= esc($chambre['ch_numero'] ?? '') ?>">
         </div>
         <div class="mb-3">
@@ -29,7 +29,7 @@
             <input type="text" name="ch_prix" class="form-control" value="<?= esc($chambre['ch_prix'] ?? '') ?>">
         </div>
         <div class="mb-3">
-            <label class="form-label">Description</label>
+            <label class="form-label">Nom de la chambre</label>
             <textarea name="ch_description" class="form-control"><?= esc($chambre['ch_description'] ?? '') ?></textarea>
         </div>
 
