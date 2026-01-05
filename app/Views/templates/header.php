@@ -4,80 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Business Casual -->
+    <link href="<?= base_url('startbootstrap-business-casual-gh-pages/css/styles.css') ?>" rel="stylesheet">
 </head>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<body>
 
-<style>
-/* Custom color palette */
-:root {
-    --color-primary: #0D3428;
-    --color-secondary: #6E8E88;
-    --color-light: #FAF2E1;
-    --color-accent: #710019;
-}
+<header class="site-header py-4 text-center">
+    <h1 class="site-heading text-center text-faded d-none d-lg-block">
+        <span class="site-heading-upper text-primary mb-3">Nom de l’hôtel</span>
+        <span class="site-heading-lower">Business Casual</span>
+    </h1>
 
-/* Global adjustments */
-body { background-color: var(--color-light); }
-.site-header { background: var(--color-primary); border-bottom: 2px solid var(--color-secondary); }
-.brand { font-weight:700; font-size:1.25rem; color: var(--color-light); }
+    <?php $segment = service('uri')->getSegment(1); ?>
+    <?php if ($segment !== 'Connexion'): ?>
+        <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" id="mainNav">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                    Menu
+                </button>
 
-/* Override Bootstrap button colors */
-.btn-primary, .btn-outline-primary { 
-    background-color: var(--color-primary) !important; 
-    border-color: var(--color-primary) !important; 
-    color: var(--color-light) !important;
-}
-.btn-primary:hover, .btn-outline-primary:hover { 
-    background-color: var(--color-accent) !important; 
-    border-color: var(--color-accent) !important;
-}
-
-.btn-success, .btn-outline-success { 
-    background-color: var(--color-secondary) !important; 
-    border-color: var(--color-secondary) !important; 
-    color: var(--color-light) !important;
-}
-.btn-success:hover, .btn-outline-success:hover { 
-    background-color: var(--color-primary) !important; 
-    border-color: var(--color-primary) !important;
-}
-
-/* Card styling with custom colors */
-.card { border-color: var(--color-secondary); }
-.card-header { background-color: var(--color-primary); color: var(--color-light); }
-
-.room-card { aspect-ratio: 1 / 1; display:flex; flex-direction:column; }
-.room-card .card-body { display:flex; flex-direction:column; justify-content:space-between; }
-
-/* Navigation link colors */
-a { color: var(--color-accent); text-decoration: none; }
-a:hover { color: var(--color-primary); text-decoration: underline; }
-
-/* Form elements */
-.form-control:focus { border-color: var(--color-secondary); box-shadow: 0 0 0 0.2rem rgba(110, 142, 136, 0.25); }
-
-/* Alerts styling */
-.alert-success { background-color: var(--color-secondary); border-color: var(--color-primary); color: white; }
-.alert-danger { background-color: var(--color-accent); border-color: #4a0010; color: white; }
-.alert-info { background-color: var(--color-primary); border-color: var(--color-secondary); color: white; }
-</style>
-
-<header class="site-header py-2">
-    <div class="container d-flex flex-column align-items-center text-center">
-        <div class="brand">nom hôtel</div>
-        <?php // Don't show nav buttons on the authentication page ?>
-        <?php $segment = service('uri')->getSegment(1); ?>
-        <?php if ($segment !== 'Connexion'): ?>
-            <nav class="mt-2">
-                <?php if (isset($iduser) && isset($userAdmin) && $userAdmin == 1): ?>
-                    <?= anchor('PageAdmin', 'Admin', 'class="btn btn-sm btn-outline-primary mx-1"') ?>
-                <?php else: ?>
-                    <?= anchor('Home', 'Accueil', 'class="btn btn-sm btn-outline-success mx-1"') ?>
-                <?php endif; ?>
-            </nav>
-        <?php endif; ?>
-    </div>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav mx-auto">
+                        <?php if (isset($iduser) && isset($userAdmin) && $userAdmin == 1): ?>
+                            <li class="nav-item px-lg-4">
+                                <?= anchor('PageAdmin', 'Admin', 'class="nav-link text-uppercase"') ?>
+                            </li>
+                        <?php else: ?>
+                            <li class="nav-item px-lg-4">
+                                <?= anchor('Home', 'Accueil', 'class="nav-link text-uppercase"') ?>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    <?php endif; ?>
 </header>
-

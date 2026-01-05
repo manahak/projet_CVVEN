@@ -1,9 +1,9 @@
-    <footer class="text-center py-3" style="background: var(--color-secondary); color: var(--color-light);">
-        <div class="container">
-            <em>&copy; 2025, Mana Hak</em>
-        </div>
-    </footer>
+<footer class="footer text-faded text-center py-5">
+    <div class="container">
+        <p class="m-0 small">&copy; 2025, Mana Hak</p>
+    </div>
+</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?= base_url('startbootstrap-business-casual-gh-pages/js/scripts.js') ?>"></script>
 </body>
 </html>
