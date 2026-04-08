@@ -7,6 +7,7 @@
 <?php endif; ?>
 
 <form action="<?= site_url('Inscription/register') ?>" method="post">
+    <?= csrf_field() ?>
     <div class="mb-3">
         <label>Nom</label>
         <input type="text" name="cl_nom" class="form-control" required>
@@ -22,6 +23,21 @@
     <div class="mb-3">
         <label>Mot de passe</label>
         <input type="password" name="password" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Question de sécurité</label>
+        <select name="security_question_id" class="form-select">
+            <option value="">-- Choisir une question (optionnel) --</option>
+            <?php if (!empty($questions)): ?>
+                <?php foreach ($questions as $q): ?>
+                    <option value="<?= esc($q['id']) ?>"><?= esc($q['question_text']) ?></option>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Réponse (si question choisie)</label>
+        <input type="text" name="security_answer" class="form-control" placeholder="Votre réponse">
     </div>
     <button type="submit" class="btn btn-success w-100">S’inscrire</button>
 </form>
