@@ -71,8 +71,16 @@ a:hover { color: var(--color-primary); text-decoration: underline; }
         <?php $segment = service('uri')->getSegment(1); ?>
         <?php if ($segment !== 'Connexion'): ?>
             <nav class="mt-2">
-                <?php if (isset($iduser) && isset($userAdmin) && $userAdmin == 1): ?>
-                    <?= anchor('PageAdmin', 'Admin', 'class="btn btn-sm btn-outline-primary mx-1"') ?>
+                <?php if (session()->get('idUser')): ?>
+                    <?php // Show admin or home link depending on role ?>
+                    <?php if (session()->get('userAdmin') && session()->get('userAdmin') == 1): ?>
+                        <?= anchor('PageAdmin', 'Admin', 'class="btn btn-sm btn-outline-primary mx-1"') ?>
+                    <?php else: ?>
+                        <?= anchor('Home', 'Accueil', 'class="btn btn-sm btn-outline-success mx-1"') ?>
+                    <?php endif; ?>
+
+                    <?php // Logout button available to all logged-in users ?>
+                    <?= anchor('Connexion/deconnexion', 'Déconnexion', 'class="btn btn-sm btn-outline-danger mx-1"') ?>
                 <?php else: ?>
                     <?= anchor('Home', 'Accueil', 'class="btn btn-sm btn-outline-success mx-1"') ?>
                 <?php endif; ?>

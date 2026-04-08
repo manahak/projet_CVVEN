@@ -36,7 +36,7 @@
         </select>
     </div>
     <div class="mb-3">
-        <label>Réponse (si question choisie)</label>
+        <label>Réponse</label>
         <input type="text" name="security_answer" class="form-control" placeholder="Votre réponse">
     </div>
     <button type="submit" class="btn btn-success w-100">S’inscrire</button>

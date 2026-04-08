@@ -9,6 +9,30 @@
 <!-- Banner for messages -->
 <div id="reservation-message" style="display:none; margin-bottom:1rem;"></div>
 
+<!-- Reviews strip -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="m-0">Avis clients</h5>
+        <div>
+            <label class="me-2">Trier :</label>
+            <select id="reviews-sort" class="form-select form-select-sm d-inline-block" style="width:auto;">
+                <option value="date_desc">Les plus récents</option>
+                <option value="date_asc">Les plus anciens</option>
+                <option value="rating_desc">Note décroissante</option>
+                <option value="rating_asc">Note croissante</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="reviews-box" style="max-height:180px; overflow:auto; border:1px solid #ddd; padding:0.5rem; border-radius:6px; background:#fff">
+        <!-- Reviews will be injected here -->
+        <div id="reviews-list" class="list-group list-group-flush"></div>
+    </div>
+    <div id="review-form-container" class="mt-2">
+        <!-- If user eligible, show form -->
+    </div>
+</div>
+
 <form id="reservation-form" action="<?= site_url('Reservation/submit') ?>" method="post">
     <input type="hidden" name="Id_Chambre" value="<?= $chambre['Id_Chambre'] ?>">
     
@@ -123,6 +147,105 @@ document.addEventListener('DOMContentLoaded', function() {
             console.warn('Could not fetch reserved dates');
             renderCalendar();
         });
+
+    // --- Reviews fetch and rendering ---
+    const reviewsApi = <?= json_encode(site_url('Reservation/getReviews/')) ?>;
+    const submitReviewApi = <?= json_encode(site_url('Reservation/submitReview')) ?>;
+    let reviews = [];
+
+    function fetchReviews() {
+        fetch(reviewsApi + chambreId)
+            .then(r => r.json())
+            .then(data => {
+                reviews = data.reviews || [];
+                renderReviews();
+                checkUserEligibility();
+            })
+            .catch(() => console.warn('Could not fetch reviews'));
+    }
+
+    function renderReviews() {
+        const list = document.getElementById('reviews-list');
+        list.innerHTML = '';
+        const sort = document.getElementById('reviews-sort').value;
+
+        let sorted = reviews.slice();
+        if (sort === 'date_desc') sorted.sort((a,b)=> new Date(b.created_at)-new Date(a.created_at));
+        if (sort === 'date_asc') sorted.sort((a,b)=> new Date(a.created_at)-new Date(b.created_at));
+        if (sort === 'rating_desc') sorted.sort((a,b)=> b.rating - a.rating || (new Date(b.created_at)-new Date(a.created_at)));
+        if (sort === 'rating_asc') sorted.sort((a,b)=> a.rating - b.rating || (new Date(b.created_at)-new Date(a.created_at)));
+
+        if (sorted.length === 0) {
+            list.innerHTML = '<div class="text-muted small">Aucun avis pour le moment.</div>';
+            return;
+        }
+
+        sorted.forEach(r => {
+            const item = document.createElement('div');
+            item.className = 'list-group-item';
+            const period = r.stay_start && r.stay_end ? '<div class="text-muted small">Séjour du ' + escapeHtml(r.stay_start.split(' ')[0]) + ' au ' + escapeHtml(r.stay_end.split(' ')[0]) + '</div>' : '';
+            const stars = '<div class="mb-1">' + '★'.repeat(r.rating) + '☆'.repeat(5-r.rating) + '</div>';
+            const comment = r.comment ? '<div>' + escapeHtml(r.comment) + '</div>' : '';
+            item.innerHTML = stars + period + comment + '<div class="text-muted small mt-1">Publié le ' + (r.created_at ? escapeHtml(r.created_at.split(' ')[0]) : '') + '</div>';
+            list.appendChild(item);
+        });
+    }
+
+    document.getElementById('reviews-sort').addEventListener('change', renderReviews);
+
+    // Check if current user can leave review, and render form if so
+    function checkUserEligibility() {
+        // Call an endpoint to check eligibility (reuse existing logic: user must have past reservation)
+        fetch('<?= site_url('Reservation/checkEligibility/') ?>' + chambreId, { headers: {'X-Requested-With':'XMLHttpRequest'} })
+            .then(r => r.json())
+            .then(data => {
+                const container = document.getElementById('review-form-container');
+                container.innerHTML = '';
+                if (data && data.eligible) {
+                    // show form
+                    container.innerHTML = `
+                        <form id="review-form">
+                            <input type="hidden" name="Id_Chambre" value="${chambreId}">
+                            <div class="mb-2"><label class="form-label">Votre note (1-5)</label>
+                                <select name="rating" class="form-select form-select-sm" required>
+                                    <option value="">-- Choisir --</option>
+                                    <option value="5">5 - Excellent</option>
+                                    <option value="4">4 - Très bien</option>
+                                    <option value="3">3 - Moyen</option>
+                                    <option value="2">2 - Mauvais</option>
+                                    <option value="1">1 - Très mauvais</option>
+                                </select>
+                            </div>
+                            <div class="mb-2"><label class="form-label">Commentaire (optionnel)</label>
+                                <textarea name="comment" class="form-control" rows="2" placeholder="Votre avis"></textarea>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" id="submit-review">Envoyer l'avis</button>
+                        </form>
+                    `;
+
+                    document.getElementById('review-form-container').querySelector('#review-form').addEventListener('submit', function(e){
+                        e.preventDefault();
+                        const fd = new FormData(e.target);
+                        fetch(submitReviewApi, { method:'POST', body:fd, headers: {'X-Requested-With':'XMLHttpRequest'} })
+                            .then(r=>r.json())
+                            .then(d=>{
+                                if (d.status === 'success') {
+                                    fetchReviews();
+                                    alert(d.message || 'Merci pour votre avis');
+                                } else {
+                                    alert(d.message || 'Erreur lors de l\'envoi de l\'avis');
+                                }
+                            }).catch(()=> alert('Erreur réseau'));
+                    });
+                } else {
+                    // show message if not eligible
+                    container.innerHTML = '<div class="text-muted small">Seuls les clients ayant déjà séjourné peuvent laisser un avis.</div>';
+                }
+            });
+    }
+
+    // initial fetch
+    fetchReviews();
 
     // Toggle mode
     document.querySelectorAll('input[name="date-mode"]').forEach(el => {
