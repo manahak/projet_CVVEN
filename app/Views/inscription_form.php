@@ -26,8 +26,8 @@
     </div>
     <div class="mb-3">
         <label>Question de sécurité</label>
-        <select name="security_question_id" class="form-select">
-            <option value="">-- Choisir une question (optionnel) --</option>
+        <select name="security_question_id" class="form-select" required>
+            <option value="">-- Choisir une question --</option>
             <?php if (!empty($questions)): ?>
                 <?php foreach ($questions as $q): ?>
                     <option value="<?= esc($q['id']) ?>"><?= esc($q['question_text']) ?></option>

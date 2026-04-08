@@ -33,6 +33,11 @@ class Inscription extends Controller
         $security_question_id = $this->request->getPost('security_question_id');
         $security_answer = $this->request->getPost('security_answer');
 
+        // La sélection de la question de sécurité est désormais obligatoire
+        if (empty($security_question_id)) {
+            return redirect()->back()->with('error', 'Veuillez choisir une question de sécurité.');
+        }
+
         // Hacher la réponse de sécurité si fournie
         $security_answer_hash = null;
         if (!empty($security_answer)) {
