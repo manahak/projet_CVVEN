@@ -1,3 +1,5 @@
+    </main>
+
     <footer class="text-center py-3" style="background: var(--color-secondary); color: var(--color-light);">
         <div class="container">
             <em>&copy; 2025, Mana Hak</em>

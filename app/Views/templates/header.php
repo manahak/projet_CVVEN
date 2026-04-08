@@ -58,10 +58,23 @@ a:hover { color: var(--color-primary); text-decoration: underline; }
 /* Form elements */
 .form-control:focus { border-color: var(--color-secondary); box-shadow: 0 0 0 0.2rem rgba(110, 142, 136, 0.25); }
 
-/* Alerts styling */
+</* Alerts styling */
 .alert-success { background-color: var(--color-secondary); border-color: var(--color-primary); color: white; }
 .alert-danger { background-color: var(--color-accent); border-color: #4a0010; color: white; }
 .alert-info { background-color: var(--color-primary); border-color: var(--color-secondary); color: white; }
+
+/* Page wrapper to ensure minimum side margins and max width for content */
+.page-inner {
+    max-width: 1100px;
+    margin: 1.25rem auto;
+    padding: 0 1rem;
+}
+
+/* Make form controls full width within the content area but not exceed container */
+.page-inner .form-control, .page-inner .form-select, .page-inner textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
 </style>
 
 <header class="site-header py-2">
@@ -88,4 +101,6 @@ a:hover { color: var(--color-primary); text-decoration: underline; }
         <?php endif; ?>
     </div>
 </header>
+
+<main class="page-inner">
 
